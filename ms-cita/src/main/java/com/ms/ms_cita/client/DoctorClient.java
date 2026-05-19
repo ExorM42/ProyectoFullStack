@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.ms.ms_cita.dto.DoctorDTO;
 import com.ms.ms_cita.dto.RemoteApiWrapper;
 
-@FeignClient(name = "ms-dcotor", url = "${ms.doctor.url}")
+@FeignClient(name = "ms-doctor", url = "${ms.doctor.url}")
 public interface DoctorClient {
 
     @GetMapping("/api/doctores/{id}")

@@ -10,7 +10,7 @@ import com.ms.ms_licencia.dto.RemoteApiWrapper;
 @FeignClient(name = "ms-cita", url = "${ms.cita.url}")
 public interface CitaClient {
 
-    @GetMapping("/api/citas({id}")
+    @GetMapping("/api/citas/{id}")
     RemoteApiWrapper<CitaDTO> obtenerPorId(@PathVariable("id") Long id);
 
 }
