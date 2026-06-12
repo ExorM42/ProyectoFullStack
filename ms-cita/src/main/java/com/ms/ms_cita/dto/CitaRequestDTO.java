@@ -15,9 +15,6 @@ import lombok.Data;
 @Data
 public class CitaRequestDTO {
 
-    @NotNull(message = "El ID del paciente debe ser obligatorio")
-    @Positive(message = "El ID del paciente debe ser positivo")
-    private Long pacienteId;
 
     @NotNull(message = "El ID del doctor debe ser obligatorio")
     @Positive(message = "El ID del doctor debe ser positivo")

@@ -15,7 +15,6 @@ import com.ms.ms_cita.dto.CitaResponseDTO;
 import com.ms.ms_cita.dto.DoctorDTO;
 import com.ms.ms_cita.dto.PacienteDTO;
 import com.ms.ms_cita.dto.RemoteApiWrapper;
-import com.ms.ms_cita.exception.HorarioOcupadoException;
 import com.ms.ms_cita.exception.ResourceNotFoundException;
 import com.ms.ms_cita.mapper.CitaMapper;
 import com.ms.ms_cita.model.Cita;
@@ -113,27 +112,22 @@ public class CitaService {
     }
 
     @Transactional
-    public CitaResponseDTO crearCita(CitaRequestDTO requestDTO){
-        PacienteDTO paciente = obtenerPaciente(requestDTO.getPacienteId());
-        DoctorDTO doctor = obtenerDoctor(requestDTO.getDoctorId());
-        LocalDateTime inicio = requestDTO.getFechaHoraCita();
-        LocalDateTime fin = inicio.plusMinutes(requestDTO.getDuracionMinutos());
+    public CitaResponseDTO crearCita(CitaRequestDTO dto, Long pacienteId) {
+        PacienteDTO paciente = obtenerPaciente(pacienteId);
+        DoctorDTO doctor = obtenerDoctor(dto.getDoctorId());
 
-        if  (citaRepository.existeCitaEnHorario(requestDTO.getDoctorId(), inicio, fin)){
-            throw new HorarioOcupadoException("El Doctor " + doctor.getNombre() + " " + doctor.getApellido() + "ya tiene una cita en ese horario");
-        }
+        Cita cita = CitaMapper.toModel(dto);
+        cita.setPacienteId(pacienteId);
+        cita.setDoctorId(dto.getDoctorId());
+        cita.setEstado("PENDIENTE");
 
-        if  (inicio.isAfter(LocalDateTime.now().plusDays(60))){
-            throw new IllegalStateException("No se puede agendar cita con mas de 60 días de anticipación");
-        }
+        Cita guardada = citaRepository.save(cita);
 
-        Cita cita = CitaMapper.toModel(requestDTO);
+        CitaResponseDTO response = CitaMapper.toDTO(guardada);
+        CitaMapper.agregarDatosPaciente(response, paciente);
+        CitaMapper.agregarDatosDoctor(response, doctor);
 
-        Cita guardar = citaRepository.save(cita);
-        CitaResponseDTO responseDTO = CitaMapper.toDTO(guardar);
-        CitaMapper.agregarDatosPaciente(responseDTO, paciente);
-        CitaMapper.agregarDatosDoctor(responseDTO, doctor);
-        return responseDTO;
+        return response;
     }
 
     @Transactional
@@ -151,11 +145,19 @@ public class CitaService {
     }
 
     @Transactional
-    public void cancelar(Long id){
+    public void cancelar(Long id, Long pacienteId){
         
         Cita cita = citaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("cita", id));
         if ("COMPLETADA".equals(cita.getEstado())){
             throw new IllegalStateException("No se puede cancelar una cita ya completada");
+        }
+
+        if (!cita.getPacienteId().equals(pacienteId)){
+            throw new IllegalStateException("No puedes cancelar una cita que pertenzca a otro paciente");
+        }
+
+        if ("CANCELADA".equals(cita.getEstado())){
+            throw new IllegalStateException("La cita ya se encuentra cancelada");
         }
         cita.setEstado("CANCELADA");
         citaRepository.save(cita);

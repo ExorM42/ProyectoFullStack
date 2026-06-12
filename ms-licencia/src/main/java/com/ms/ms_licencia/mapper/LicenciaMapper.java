@@ -54,7 +54,7 @@ public class LicenciaMapper {
         return dto;
     }
 
-    public static LicenciaMedica toModel(LicenciaRequestDTO dto, TipoLicencia tipoLicencia,String folio, int diasReposo){
+    public static LicenciaMedica toModel(LicenciaRequestDTO dto, TipoLicencia tipoLicencia, String folio, int diasReposo, Long doctorId){
             if (dto == null){
                 return null;
             }
@@ -62,7 +62,7 @@ public class LicenciaMapper {
             LicenciaMedica licencia = new LicenciaMedica();
             licencia.setFolio(folio);
             licencia.setPacienteId(dto.getPacienteId());
-            licencia.setDoctorId(dto.getDoctorId());
+            licencia.setDoctorId(doctorId);
             licencia.setCitaId(dto.getCitaId());
             licencia.setTipoLicencia(tipoLicencia);
             licencia.setDiagnostico(dto.getDiagnostico());

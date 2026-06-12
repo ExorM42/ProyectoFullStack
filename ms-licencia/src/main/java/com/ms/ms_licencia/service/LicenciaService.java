@@ -98,18 +98,18 @@ public class LicenciaService {
             }
         }
 
-        private void validarCita(LicenciaRequestDTO requestDTO){
+        private void validarCita(LicenciaRequestDTO requestDTO, Long doctorId){
             if(requestDTO.getCitaId() == null){
                 return;
             }
             CitaDTO cita = obtenerCita(requestDTO.getCitaId());
 
             if (!requestDTO.getPacienteId().equals(cita.getPacienteId())){
-                throw new IllegalStateException("La cita no está asociada a dicho paciente");
+                throw new IllegalStateException("La cita no esta asociada a dicho paciente");
             }
 
-            if (!requestDTO.getDoctorId().equals(cita.getDoctorId())){
-                throw new IllegalStateException("La cita no está asociada a dicho doctor");
+            if (!doctorId.equals(cita.getDoctorId())){
+                throw new IllegalStateException("La cita no esta asociada a dicho doctor");
             }
 
             if ("CANCELADA".equals(cita.getEstado()) || "NO ASISTIO".equals(cita.getEstado())){
@@ -160,7 +160,7 @@ public class LicenciaService {
         }
 
         @Transactional
-        public LicenciaResponseDTO emitir(LicenciaRequestDTO requestDTO){
+        public LicenciaResponseDTO emitir(LicenciaRequestDTO requestDTO, Long doctorId){
 
             if(!requestDTO.getFechaFin().isAfter(requestDTO.getFechaInicio())){
                 throw new IllegalStateException("La fecha de fin debe ser posterior a la fecha de inicio");
@@ -178,9 +178,9 @@ public class LicenciaService {
             }
 
             PacienteDTO paciente = obtenerPaciente(requestDTO.getPacienteId());
-            DoctorDTO doctor = obtenerDoctor(requestDTO.getDoctorId());
+            DoctorDTO doctor = obtenerDoctor(doctorId);
 
-            validarCita(requestDTO);
+            validarCita(requestDTO, doctorId);
 
             int diasAcumulados = licenciaRepository.totalDiasReposoAnio(requestDTO.getPacienteId(), LocalDate.now().getYear());
             if (diasAcumulados + diasReposo > 60){
@@ -189,7 +189,7 @@ public class LicenciaService {
 
             String folio = generarFolio();
 
-            LicenciaMedica licencia = LicenciaMapper.toModel(requestDTO, tipoLicencia, folio, (int)diasReposo);
+            LicenciaMedica licencia = LicenciaMapper.toModel(requestDTO, tipoLicencia, folio, (int)diasReposo, doctorId);
 
             LicenciaMedica guardada = licenciaRepository.save(licencia);
 
@@ -198,10 +198,13 @@ public class LicenciaService {
             LicenciaMapper.agregarDatosDoctor(responseDTO, doctor);
             return responseDTO;
         }
-
         @Transactional
-        public LicenciaResponseDTO actualizarEstado(Long id, ActualizarEstadoLicenciaDTO dto) {
+        public LicenciaResponseDTO actualizarEstado(Long id, ActualizarEstadoLicenciaDTO dto, Long doctorId) {
             LicenciaMedica licencia = licenciaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Licencia", id));
+
+            if (!licencia.getDoctorId().equals(doctorId)) {
+                throw new IllegalStateException("No puedes modificar una licencia emitida por otro doctor");
+            }
 
             if ("ANULADA".equals(licencia.getEstado())) {
                 throw new IllegalStateException("No se puede modificar una licencia en estado ANULADA");
@@ -213,14 +216,19 @@ public class LicenciaService {
             }
 
             LicenciaMedica actualizada = licenciaRepository.save(licencia);
-            return LicenciaMapper.toDTO(actualizada);
+            LicenciaResponseDTO responseDTO = LicenciaMapper.toDTO(actualizada);
+            datosRemotos(responseDTO, actualizada.getPacienteId(), actualizada.getDoctorId());
+            return responseDTO;
         }
 
         @Transactional
-        public void anular(Long id) {
+        public void anular(Long id, Long doctorId) {
             LicenciaMedica licencia = licenciaRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Licencia", id));
 
+            if (!licencia.getDoctorId().equals(doctorId)) {
+                throw new IllegalStateException("No puedes anular una licencia emitida por otro doctor");
+            }
             if ("ANULADA".equals(licencia.getEstado())) {
                 throw new IllegalStateException("La licencia ya se encuentra anulada");
             }
