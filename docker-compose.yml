@@ -1,0 +1,104 @@
+services:
+  eureka-server:
+    build: ./ms-eureka-server
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    environment:
+      PORT: 8761
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: 8080
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      MS_PACIENTE_URL: http://ms-paciente:8081
+      MS_DOCTOR_URL: http://ms-doctor:8082
+      MS_CITA_URL: http://ms-cita:8083
+      MS_LICENCIA_URL: http://ms-licencia:8084
+      MS_AUTH_URL: http://ms-auth:8085
+    depends_on:
+      - eureka-server
+      - ms-paciente
+      - ms-doctor
+      - ms-cita
+      - ms-licencia
+      - ms-auth
+
+  ms-paciente:
+    build: ./ms-paciente
+    container_name: ms-paciente
+    ports:
+      - "8081:8081"
+    environment:
+      PORT: 8081
+      TNS_ADMIN: /app/wallet
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      MS_CITA_URL: http://ms-cita:8083
+    depends_on:
+      - eureka-server
+
+  ms-doctor:
+    build: ./ms-doctor
+    container_name: ms-doctor
+    ports:
+      - "8082:8082"
+    environment:
+      PORT: 8082
+      TNS_ADMIN: /app/wallet
+      EUREKA_URL: http://eureka-server:8761/eureka/
+    depends_on:
+      - eureka-server
+
+  ms-cita:
+    build: ./ms-cita
+    container_name: ms-cita
+    ports:
+      - "8083:8083"
+    environment:
+      PORT: 8083
+      TNS_ADMIN: /app/wallet
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      MS_PACIENTE_URL: http://ms-paciente:8081
+      MS_DOCTOR_URL: http://ms-doctor:8082
+      JWT_SECRET: ${JWT_SECRET:-7Fq9Lm2Zx8RpQw4Tn6Vy1Ks5Db3Ha0CeSilvestre1313.}
+    depends_on:
+      - eureka-server
+      - ms-paciente
+      - ms-doctor
+
+  ms-licencia:
+    build: ./ms-licencia
+    container_name: ms-licencia
+    ports:
+      - "8084:8084"
+    environment:
+      PORT: 8084
+      TNS_ADMIN: /app/wallet
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      MS_PACIENTE_URL: http://ms-paciente:8081
+      MS_DOCTOR_URL: http://ms-doctor:8082
+      MS_CITA_URL: http://ms-cita:8083
+      JWT_SECRET: ${JWT_SECRET:-7Fq9Lm2Zx8RpQw4Tn6Vy1Ks5Db3Ha0CeSilvestre1313.}
+    depends_on:
+      - eureka-server
+      - ms-paciente
+      - ms-doctor
+      - ms-cita
+
+  ms-auth:
+    build: ./ms-auth
+    container_name: ms-auth
+    ports:
+      - "8085:8085"
+    environment:
+      PORT: 8085
+      TNS_ADMIN: /app/wallet
+      EUREKA_URL: http://eureka-server:8761/eureka/
+      JWT_SECRET: ${JWT_SECRET:-7Fq9Lm2Zx8RpQw4Tn6Vy1Ks5Db3Ha0CeSilvestre1313.}
+      JWT_EXPIRATION: 14400000
+    depends_on:
+      - eureka-server

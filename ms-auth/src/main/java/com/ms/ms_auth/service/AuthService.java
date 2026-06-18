@@ -25,7 +25,7 @@ public class AuthService {
     }
 
     public AuthResponseDTO registrar(RegisterRequestDTO dto){
-        if (usuarioRepository.existByEmail(dto.getEmail())){
+        if (usuarioRepository.existsByEmail(dto.getEmail())){
             throw new IllegalStateException("Ya existe un usuario con ese email");
         }
 
