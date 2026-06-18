@@ -1,0 +1,53 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      default-filters:
+        - AddResponseHeader=X-Gateway, Clinica-API-Gateway
+      routes:
+        - id: ms-paciente
+          uri: ${MS_PACIENTE_URL:http://localhost:8081}
+          predicates:
+            - Path=/api/pacientes/**,/api/previsiones/**
+
+        - id: ms-doctor
+          uri: ${MS_DOCTOR_URL:http://localhost:8082}
+          predicates:
+            - Path=/api/doctores/**,/api/especialidades/**
+
+        - id: ms-cita
+          uri: ${MS_CITA_URL:http://localhost:8083}
+          predicates:
+            - Path=/api/citas/**
+
+        - id: ms-licencia
+          uri: ${MS_LICENCIA_URL:http://localhost:8084}
+          predicates:
+            - Path=/api/licencias/**,/api/tipos-licencia/**
+
+        - id: ms-auth
+          uri: ${MS_AUTH_URL:http://localhost:8085}
+          predicates:
+            - Path=/api/auth/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+  instance:
+    prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
+
+logging:
+  level:
+    org.springframework.cloud.gateway: INFO
+    reactor.netty.http.client: INFO

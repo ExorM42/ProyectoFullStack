@@ -1,0 +1,250 @@
+{
+  "info": {
+    "name": "ms-doctor - Ejemplos",
+    "description": "Ejemplos Postman para rutas directas y via API Gateway de ms-doctor.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8082"
+    },
+    {
+      "key": "gatewayUrl",
+      "value": "http://localhost:8080"
+    }
+  ],
+  "item": [
+    {
+      "name": "Directo",
+      "item": [
+        {
+          "name": "GET listar doctores",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/doctores"
+          }
+        },
+        {
+          "name": "GET doctor por ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/doctores/1"
+          }
+        },
+        {
+          "name": "GET doctor por RUT",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/doctores/rut/11222333-4"
+          }
+        },
+        {
+          "name": "GET doctores por especialidad",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/doctores/especialidad/1"
+          }
+        },
+        {
+          "name": "GET listar especialidades",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/especialidades"
+          }
+        },
+        {
+          "name": "POST crear doctor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rut\": \"12344321-9\",\n  \"nombre\": \"Valentina\",\n  \"apellido\": \"Fuentes\",\n  \"email\": \"valentina.fuentes@clinica.local\",\n  \"telefono\": \"+56944445555\",\n  \"numeroRegistro\": \"REG-MED-3001\",\n  \"especialidadId\": 1,\n  \"fechaContratacion\": \"2023-04-01\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/api/doctores"
+          }
+        },
+        {
+          "name": "PUT actualizar doctor",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rut\": \"12344321-9\",\n  \"nombre\": \"Valentina\",\n  \"apellido\": \"Fuentes Diaz\",\n  \"email\": \"valentina.fuentes@clinica.local\",\n  \"telefono\": \"+56944445555\",\n  \"numeroRegistro\": \"REG-MED-3001\",\n  \"especialidadId\": 1,\n  \"fechaContratacion\": \"2023-04-01\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/api/doctores/1"
+          }
+        },
+        {
+          "name": "PATCH desactivar doctor",
+          "request": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/doctores/1/desactivar"
+          }
+        },
+        {
+          "name": "DELETE doctor administrativo",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/doctores/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Gateway",
+      "item": [
+        {
+          "name": "Gateway GET listar doctores",
+          "request": {
+            "method": "GET",
+            "url": "{{gatewayUrl}}/api/doctores"
+          }
+        },
+        {
+          "name": "Gateway POST crear doctor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rut\": \"66777888-9\",\n  \"nombre\": \"Ignacio\",\n  \"apellido\": \"Paredes\",\n  \"email\": \"ignacio.paredes@clinica.local\",\n  \"telefono\": \"+56955556666\",\n  \"numeroRegistro\": \"REG-MED-3002\",\n  \"especialidadId\": 3,\n  \"fechaContratacion\": \"2024-01-15\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{gatewayUrl}}/api/doctores"
+          }
+        },
+        {
+          "name": "Gateway PUT actualizar doctor",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rut\": \"66777888-9\",\n  \"nombre\": \"Ignacio\",\n  \"apellido\": \"Paredes Mora\",\n  \"email\": \"ignacio.paredes@clinica.local\",\n  \"telefono\": \"+56955556666\",\n  \"numeroRegistro\": \"REG-MED-3002\",\n  \"especialidadId\": 3,\n  \"fechaContratacion\": \"2024-01-15\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{gatewayUrl}}/api/doctores/1"
+          }
+        },
+        {
+          "name": "Gateway PATCH desactivar doctor",
+          "request": {
+            "method": "PATCH",
+            "url": "{{gatewayUrl}}/api/doctores/1/desactivar"
+          }
+        },
+        {
+          "name": "Gateway DELETE doctor administrativo",
+          "request": {
+            "method": "DELETE",
+            "url": "{{gatewayUrl}}/api/doctores/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Errores",
+      "item": [
+        {
+          "name": "POST campo obligatorio vacio",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rut\": \"\",\n  \"nombre\": \"A\",\n  \"apellido\": \"Fuentes\",\n  \"email\": \"correo-invalido\",\n  \"telefono\": \"123\",\n  \"numeroRegistro\": \"\",\n  \"especialidadId\": 1,\n  \"fechaContratacion\": \"2023-04-01\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/api/doctores"
+          }
+        },
+        {
+          "name": "POST fecha futura",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rut\": \"77888999-0\",\n  \"nombre\": \"Error\",\n  \"apellido\": \"Fecha\",\n  \"email\": \"error.fecha@clinica.local\",\n  \"telefono\": \"+56966667777\",\n  \"numeroRegistro\": \"REG-MED-4001\",\n  \"especialidadId\": 1,\n  \"fechaContratacion\": \"2030-01-01\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/api/doctores"
+          }
+        },
+        {
+          "name": "GET ID no encontrado",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/doctores/9999"
+          }
+        },
+        {
+          "name": "GET especialidad invalida",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/doctores/especialidad/0"
+          }
+        }
+      ]
+    }
+  ]
+}

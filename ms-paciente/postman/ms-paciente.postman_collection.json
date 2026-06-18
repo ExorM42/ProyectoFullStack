@@ -1,0 +1,257 @@
+{
+  "info": {
+    "name": "ms-paciente - Ejemplos",
+    "description": "Ejemplos Postman para rutas directas y via API Gateway de ms-paciente.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8081"
+    },
+    {
+      "key": "gatewayUrl",
+      "value": "http://localhost:8080"
+    }
+  ],
+  "item": [
+    {
+      "name": "Directo",
+      "item": [
+        {
+          "name": "GET listar pacientes",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/pacientes"
+          }
+        },
+        {
+          "name": "GET paciente por ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/pacientes/1"
+          }
+        },
+        {
+          "name": "GET paciente por RUT",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/pacientes/rut/12345678-9"
+          }
+        },
+        {
+          "name": "GET pacientes por edad",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/pacientes/edad/36"
+          }
+        },
+        {
+          "name": "GET buscar por apellido",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/pacientes/buscar?apellido=Perez"
+          }
+        },
+        {
+          "name": "GET listar previsiones",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/previsiones"
+          }
+        },
+        {
+          "name": "POST crear paciente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rut\": \"33444555-6\",\n  \"nombre\": \"Laura\",\n  \"apellido\": \"Soto\",\n  \"fechaNacimiento\": \"1995-06-05\",\n  \"genero\": \"FEMENINO\",\n  \"email\": \"laura.soto@example.com\",\n  \"telefono\": \"+56911112222\",\n  \"direccion\": \"Av. Central 100\",\n  \"previsionId\": 1,\n  \"edad\": 31,\n  \"acompanado\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/api/pacientes"
+          }
+        },
+        {
+          "name": "PUT actualizar paciente",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rut\": \"33444555-6\",\n  \"nombre\": \"Laura\",\n  \"apellido\": \"Soto Rivas\",\n  \"fechaNacimiento\": \"1995-06-05\",\n  \"genero\": \"FEMENINO\",\n  \"email\": \"laura.soto@example.com\",\n  \"telefono\": \"+56911112222\",\n  \"direccion\": \"Av. Central 200\",\n  \"previsionId\": 1,\n  \"edad\": 31,\n  \"acompanado\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/api/pacientes/1"
+          }
+        },
+        {
+          "name": "PATCH desactivar paciente",
+          "request": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/api/pacientes/1/desactivar"
+          }
+        },
+        {
+          "name": "DELETE paciente administrativo",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/pacientes/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Gateway",
+      "item": [
+        {
+          "name": "Gateway GET listar pacientes",
+          "request": {
+            "method": "GET",
+            "url": "{{gatewayUrl}}/api/pacientes"
+          }
+        },
+        {
+          "name": "Gateway POST crear paciente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rut\": \"44555666-7\",\n  \"nombre\": \"Pedro\",\n  \"apellido\": \"Mena\",\n  \"fechaNacimiento\": \"1988-02-20\",\n  \"genero\": \"MASCULINO\",\n  \"email\": \"pedro.mena@example.com\",\n  \"telefono\": \"+56922223333\",\n  \"direccion\": \"Las Flores 88\",\n  \"previsionId\": 2,\n  \"edad\": 38,\n  \"acompanado\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{gatewayUrl}}/api/pacientes"
+          }
+        },
+        {
+          "name": "Gateway PUT actualizar paciente",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rut\": \"44555666-7\",\n  \"nombre\": \"Pedro\",\n  \"apellido\": \"Mena Silva\",\n  \"fechaNacimiento\": \"1988-02-20\",\n  \"genero\": \"MASCULINO\",\n  \"email\": \"pedro.mena@example.com\",\n  \"telefono\": \"+56922223333\",\n  \"direccion\": \"Las Flores 90\",\n  \"previsionId\": 2,\n  \"edad\": 38,\n  \"acompanado\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{gatewayUrl}}/api/pacientes/1"
+          }
+        },
+        {
+          "name": "Gateway PATCH desactivar paciente",
+          "request": {
+            "method": "PATCH",
+            "url": "{{gatewayUrl}}/api/pacientes/1/desactivar"
+          }
+        },
+        {
+          "name": "Gateway DELETE paciente administrativo",
+          "request": {
+            "method": "DELETE",
+            "url": "{{gatewayUrl}}/api/pacientes/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Errores",
+      "item": [
+        {
+          "name": "POST campo obligatorio vacio",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rut\": \"\",\n  \"nombre\": \"L\",\n  \"apellido\": \"Soto\",\n  \"fechaNacimiento\": \"1995-06-05\",\n  \"genero\": \"FEMENINO\",\n  \"email\": \"correo-invalido\",\n  \"telefono\": \"123\",\n  \"previsionId\": 1,\n  \"edad\": 31,\n  \"acompanado\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/api/pacientes"
+          }
+        },
+        {
+          "name": "POST fecha futura",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rut\": \"55666777-8\",\n  \"nombre\": \"Error\",\n  \"apellido\": \"Fecha\",\n  \"fechaNacimiento\": \"2030-01-01\",\n  \"genero\": \"OTRO\",\n  \"email\": \"error.fecha@example.com\",\n  \"telefono\": \"+56933334444\",\n  \"direccion\": \"Sin direccion\",\n  \"previsionId\": 1,\n  \"edad\": 0,\n  \"acompanado\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/api/pacientes"
+          }
+        },
+        {
+          "name": "GET ID no encontrado",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/pacientes/9999"
+          }
+        },
+        {
+          "name": "GET edad invalida",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/pacientes/edad/150"
+          }
+        }
+      ]
+    }
+  ]
+}
